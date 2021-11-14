@@ -1,0 +1,937 @@
+---
+Julia:
+################################################################################
+  - section: Summarise Cases
+    header: true
+    description: Compute table of summaries
+    julia_code:
+      template: |
+        ```julia
+        combine(data, [cols] .=> [funcs] .=> [newcols])
+        ```
+      example: |
+        ```julia
+        combine(iris, [:SepalLength, :SepalWidth] .=> mean .=> [:avSL, :avSW])
+        ```
+    r_code:
+      template: |
+        ```r
+        summarise(.data, ...)
+        ```
+      example: |
+        ```r
+        summarise(iris, avSL = mean(Sepal.Length), avSW = mean(Sepal.Width))
+        ```
+  - section: Summarise Cases
+    description: Count number of rows in each group defined by the variables
+    julia_code:
+      template: |
+        ```julia
+        combine(grouped_data, nrow)
+        ```
+      example: |
+        ```julia
+        combine(groupby(mpg, [:Cyl, :Drv], sort = true), nrow)
+        ```
+    r_code:
+      template: |
+        ```r
+        count(x, ..., wt = NULL, sort = FALSE)
+        ```
+      example: |
+        ```r
+        count(data, cyl, drv)
+        ```
+    note: functions operating on (sub)dataframes (e.g. `nrow`) can be used immediately.
+################################################################################
+  - section: Group Cases
+    header: true
+    description: Create a grouped copy of a table grouped by columns
+    julia_code:
+      template: |
+        ```julia
+        groupby(data, [cols], sort = false)
+        ```
+      example: |
+        ```julia
+        groupby(mpg, [:Cyl, :Drv], sort = true)
+        ```
+    r_code:
+      template: |
+        ```r
+        group_by(.data, ..., add = FALSE)
+        ```
+      example: |
+        ```r
+        group_by(mpg, cyl, drv)
+        ```
+  - section: Group Cases
+    description: Return ungrouped copy of table
+    julia_code:
+      template: |
+        ```julia
+        combine(grouped_data, :)
+        ```
+      example: |
+        ```julia
+        combine(grouped_mpg, :)
+        ```
+    r_code:
+      template: |
+        ```r
+        ungroup(x, ...)
+        ```
+      example: |
+        ```r
+        ungroup(grouped_mpg)
+        ```
+    note: The double colon `:` symbol means all (rows, columns, both, depending on context).
+  - section: Group Cases
+    description: Perform operation on data as if grouped into individual rows
+    julia_code:
+      template: |
+        ```julia
+        transform(data, [cols] => ByRow(func_of_cols) => [newcol])
+        ```
+      example: |
+        ```julia
+        transform(mpg, [:Cty, :Hwy] => ByRow((x,y)->max(1.5*x,y)) => :maxy)
+        ```
+    r_code:
+      template: |
+        ```r
+        rowwise(.data, ...)
+        ```
+      example: |
+        ```r
+        mpg %>% rowwise() %>% mutate(maxy = max(1.5*cty, hwy))
+        ```
+    note: Rowwise operations are akin to having distinct groups for each row.
+################################################################################
+  - section: Manipulate Cases
+    header: true
+    description: Extract rows that meet logical criteria
+    julia_code:
+      template: |
+        ```julia
+        subset(data, col => func)
+        ```
+      example: |
+        ```julia
+        subset(mpg, :Cty => x->(x.>20))
+        ```
+    r_code:
+      template: |
+        ```r
+        filter(.data, ...)
+        ```
+      example: |
+        ```r
+        filter(mpg, cty > 20)
+        ```
+  - section: Manipulate Cases
+    description: Remove rows with duplicate values
+    julia_code:
+      template: |
+        ```julia
+        unique(data, [cols])
+        ```
+      example: |
+        ```julia
+        unique(mpg, [:Cyl, :Drv])
+        ```
+    r_code:
+      template: |
+        ```r
+        distinct(.data, ..., .keep_all = FALSE)
+        ```
+      example: |
+        ```r
+        distinct(mpg, cyl, drv, .keep_all = TRUE)
+        ```
+  - section: Manipulate Cases
+    description: Select rows by position
+    julia_code:
+      template: |
+        ```julia
+        data[inds, :]
+        ```
+      example: |
+        ```julia
+        mpg[4:10, :]
+        ```
+    r_code:
+      template: |
+        ```r
+        slice(.data, ...)
+        ```
+      example: |
+        ```r
+        slice(mpg, 4:10)
+        ```
+  - section: Manipulate Cases
+    description: Randomly select rows
+    julia_code:
+      template: |
+        ```julia
+        data[rand(1:nrow(data), n), :]
+        ```
+      example: |
+        ```julia
+        mpg[rand(1:nrow(mpg), 10), :]
+        ```
+    r_code:
+      template: |
+        ```r
+        slice_sample(.data, ..., n, prop, weight_by = NULL, replace = FALSE)
+        ```
+      example: |
+        ```r
+        slice_sample(mpg, n = 5, replace = TRUE)
+        ```
+  - section: Manipulate Cases
+    description: Select rows with the highest or lowest values
+    julia_code:
+      template: |
+        ```julia
+        data[data.col .>= quantile(data.col, 1-prop),:]
+        ```
+      example: |
+        ```julia
+        mpg[mpg.Cty .>= quantile(mpg.Cty, 0.75), :]
+        ```
+    r_code:
+      template: |
+        ```r
+        slice_max(.data, order_by, ..., n, prop, with_ties = TRUE)
+        ```
+      example: |
+        ```r
+        slice_max(mpg, cty, prop = 0.25)
+        ```
+  - section: Manipulate Cases
+    description: Select last or first rows
+    julia_code:
+      template: |
+        ```julia
+        data[end-offset:end, :]
+        ```
+      example: |
+        ```julia
+        mpg[end-5:end, :]
+        ```
+    r_code:
+      template: |
+        ```r
+        slice_tail(.data, ..., n, prop)
+        ```
+      example: |
+        ```r
+        slice_tail(mpg, n = 5)
+        ```
+  - section: Manipulate Cases
+    description: Order rows by values of a column or columns
+    julia_code:
+      template: |
+        ```julia
+        sort(data, [cols])
+        ```
+      example: |
+        ```julia
+        sort(mpg, [order(:Year, rev=true), :Displ])
+        ```
+    r_code:
+      template: |
+        ```r
+        arrange(.data, ...) 
+        ```
+      example: |
+        ```r
+        arrange(mpg, desc(year), displ)
+        ```
+  - section: Manipulate Cases
+    description: Add row to a dataframe
+    julia_code:
+      template: |
+        ```julia
+        push!(dataframe, values_vector)
+        ```
+      example: |
+        ```julia
+        push!(cars, [1 1])
+        ```
+    r_code:
+      template: |
+        ```r
+        add_row(.data, ..., .before = NULL, .after = NULL)
+        ```
+      example: |
+        ```r
+        add_row(mpg, speed = 1, dist = 1)
+        ```
+  - section: Manipulate Cases
+    description: Extract column values as vector
+    julia_code:
+      template: |
+        ```julia
+        data.col
+        ```
+      example: |
+        ```julia
+        mpg.Hwy
+        ```
+    r_code:
+      template: |
+        ```r
+        pull(.data, var = -1) 
+        ```
+      example: |
+        ```r
+        pull(mpg, hwy)
+        ```
+  - section: Manipulate Cases
+    description: Extract columns as new dataframe
+    julia_code:
+      template: |
+        ```julia
+        data[:, [cols]]
+        ```
+      example: |
+        ```julia
+        mpg[:, [:Hwy, :Cty]]
+        ```
+    r_code:
+      template: |
+        ```r
+        select(.data, ...) 
+        ```
+      example: |
+        ```r
+        select(mpg, hwy, cty)
+        ```
+  - section: Manipulate Cases
+    description: Move columns to new positions
+    julia_code:
+      template: |
+        ```julia
+        select(data, colset1, colset2, ...)
+        ```
+      example: |
+        ```julia
+        relocate(mpg, :Disp, :)
+        ```
+    r_code:
+      template: |
+        ```r
+        relocate(.data, ..., .before = NULL, .after = NULL)
+        ```
+      example: |
+        ```r
+        relocate(mpg, displ)
+        ```
+  - section: Manipulate Cases
+    description: Compute new column 
+    julia_code:
+      template: |
+        ```julia
+        transform(data, [cols] => [funcs] => [newcols])
+        ```
+      example: |
+        ```julia
+        transform(mpg, :Displ => (x->log.(x)) => :logDispl)
+        ```
+    r_code:
+      template: |
+        ```r
+        mutate(.data, ..., .before = NULL, .after = NULL)
+        ```
+      example: |
+        ```r
+        mutate(mpg, logdispl = log(displ))
+        ```
+    note: make sure your function operates on vectors (use broadcasting if needed)
+  - section: Manipulate Cases
+    description: Compute new columns, dropping others
+    julia_code:
+      template: |
+        ```julia
+        select(data, [cols] => [funcs] => [newcols])
+        ```
+      example: |
+        ```julia
+        select(mpg, :Hwy => (x->log.(x)) => :logHwy)
+        ```
+    r_code:
+      template: |
+        ```r
+        transmute(.data, ...) 
+        ```
+      example: |
+        ```r
+        transmute(mpg, logdispl= log(displ)) 
+        ```
+  - section: Manipulate Cases
+    description: Rename columns
+    julia_code:
+      template: |
+        ```julia
+        rename(mpg, [cols] .=> [newcolnames])
+        ```
+      example: |
+        ```julia
+        rename(mpg, [:Model, :Year] .=> [:type, :date])
+        ```
+    r_code:
+      template: |
+        ```r
+        rename(.data, ...) 
+        ```
+      example: |
+        ```r
+        rename(mpg, type = model, date = year) 
+        ```
+################################################################################
+  - section: Vectorized Functionalities
+    header: true
+    description: Offset elements by -1
+    julia_code:
+      template: |
+        ```julia
+        transform(data, col => (x->vcat(x[2:end], missing)) => leadcol)
+        ```
+      example: |
+        ```julia
+        transform(mpg, :Year => (x->vcat(x[2:end], missing)) => :leadYear)
+        ```
+    r_code:
+      template: |
+        ```r
+        lead()
+        ```
+      example: |
+        ```r
+        mutate(mpg, leadyear = lead(year))
+        ```
+  - section: Vectorized Functionalities
+    description: Cumulative all true  
+    julia_code:
+      template: |
+        ```julia
+        cumprod(condition)
+        ```
+      example: |
+        ```julia
+        cumprod(x .< 6)
+        ```
+    r_code:
+      template: |
+        ```r
+        cumall()
+        ```
+      example: |
+        ```r
+        cumall(x < 6)
+        ```
+  - section: Vectorized Functionalities
+    description: Cumulative any true  
+    julia_code:
+      template: |
+        ```julia
+        cumsum(condition)
+        ```
+      example: |
+        ```julia
+        cumsum(x .> 6)
+        ```
+    r_code:
+      template: |
+        ```r
+        cumany()
+        ```
+      example: |
+        ```r
+        cumany(x > 6)
+        ```
+  - section: Vectorized Functionalities
+    description: Cumulative any function (e.g. max)
+    julia_code:
+      template: |
+        ```julia
+        accumulate(func, vector)
+        ```
+      example: |
+        ```julia
+        accumulate(max, x)
+        ```
+    r_code:
+      template: |
+        ```r
+        cummax()
+        ```
+      example: |
+        ```r
+        cummax(x)
+        ```
+  - section: Vectorized Functionalities
+    description: Proportion of all values smaller than
+    julia_code:
+      template: |
+        ```julia
+        ecdf(vector)(vector)
+        ```
+      example: |
+        ```julia
+        ecdf(x)(x)
+        ```
+    r_code:
+      template: |
+        ```r
+        cume_dist()
+        ```
+      example: |
+        ```r
+        cum_dist(x)
+        ```
+  - section: Vectorized Functionalities
+    description: Rank with ties = min, no gaps
+    julia_code:
+      template: |
+        ```julia
+        denserank(vector)
+        ```
+      example: |
+        ```julia
+        denserank(x)
+        ```
+    r_code:
+      template: |
+        ```r
+        dense_rank()
+        ```
+      example: |
+        ```r
+        dense_rank(x)
+        ```
+  - section: Vectorized Functionalities
+    description: Rank with ties = min
+    julia_code:
+      template: |
+        ```julia
+        competerank(vector)
+        ```
+      example: |
+        ```julia
+        competerank(x)
+        ```
+    r_code:
+      template: |
+        ```r
+        min_rank()
+        ```
+      example: |
+        ```r
+        min_rank(x)
+        ```
+  - section: Vectorized Functionalities
+    description: Bins into n bins
+    julia_code:
+      template: |
+        ```julia
+        searchsortedfirst.(Ref(nquantile(vector,n)), vector)
+        ```
+      example: |
+        ```julia
+        searchsortedfirst.(Ref(nquantile(x,2)), x)
+        ```
+    r_code:
+      template: |
+        ```r
+        ntile()
+        ```
+      example: |
+        ```r
+        ntile(x, 3)
+        ```
+  - section: Vectorized Functionalities
+    description: competerank scaled to 0 to 1
+    julia_code:
+      template: |
+        ```julia
+        (competerank(vector).-1)/(length(vector)-1)
+        ```
+      example: |
+        ```julia
+        (competerank(x).-1)/(length(x)-1)
+        ```
+    r_code:
+      template: |
+        ```r
+        percent_rank()
+        ```
+      example: |
+        ```r
+        percent_rank(x)
+        ```
+  - section: Vectorized Functionalities
+    description: Rank with ties = "first"
+    julia_code:
+      template: |
+        ```julia
+        ordinalrank(vector)
+        ```
+      example: |
+        ```julia
+        ordinalrank(x)
+        ```
+    r_code:
+      template: |
+        ```r
+        row_number()
+        ```
+      example: |
+        ```r
+        row_number(x)
+        ```
+  - section: Vectorized Functionalities
+    description: If each value is between two other values
+    julia_code:
+      template: |
+        ```julia
+        firstvalue .<= vector .<= secondvalue
+        ```
+      example: |
+        ```julia
+        (3 .<= x .<= 6)
+        ```
+    r_code:
+      template: |
+        ```r
+        between()
+        ```
+      example: |
+        ```r
+        between(x, 3, 6)
+        ```
+  - section: Vectorized Functionalities
+    description: Safe == for floating point numbers
+    julia_code:
+      template: |
+        ```julia
+        a ≈ b; isapprox(a, b, delta)
+        ```
+      example: |
+        ```julia
+        2 ≈ 1.9999999999
+        ```
+    r_code:
+      template: |
+        ```r
+        near()
+        ```
+      example: |
+        ```r
+        near(2, 1.9999999999)
+        ```
+  - section: Vectorized Functionalities
+    description: Multi-case vector if statement
+    julia_code:
+      template: |
+        ```julia
+        map(vector) do elem
+            if (case1) val1
+            elseif (case2) val2
+            elseif (case3) val3
+            else default
+            end
+        end
+        ```
+      example: |
+        ```julia
+        map(x) do x_
+            if (3 < x_ < 5) "medium"
+            elseif (x_ <= 3) "small"
+            elseif (5 <= x_) "large"
+            else "unknown"
+            end
+        end
+        ```
+    r_code:
+      template: |
+        ```r
+        case_when()
+        ```
+      example: |
+        ```r
+        case_when(x > 3 & x < 5 ~ "medium",
+                  x <= 3 ~ "small",
+                  x >= 5 ~ "large",
+                  TRUE ~ "unknown")
+        ```
+  - section: Vectorized Functionalities
+    description: first non-NA element value across vectors
+    julia_code:
+      template: |
+        ```julia
+        coalesce.(vector1, vector2)
+        ```
+      example: |
+        ```julia
+        coalesce.(y, z)
+        ```
+    r_code:
+      template: |
+        ```r
+        coalesce()
+        ```
+      example: |
+        ```r
+        coalesce(y, z)
+        ```
+  - section: Vectorized Functionalities
+    description: Element-wise if statement
+    julia_code:
+      template: |
+        ```julia
+        ifelse.(vectorized_cond , true_val, false_val)
+        ```
+      example: |
+        ```julia
+        ifelse.(x .> 3, "large", "small")
+        ```
+    r_code:
+      template: |
+        ```r
+        if_else()
+        ```
+      example: |
+        ```r
+        if_else(x > 3, "large", "small")
+        ```
+  - section: Vectorized Functionalities
+    description: Replace specific values with NA
+    julia_code:
+      template: |
+        ```julia
+        replace(x, value_to_replace=>missing)
+        ```
+      example: |
+        ```julia
+        replace(x, 9=>missing)
+        ```
+    r_code:
+      template: |
+        ```r
+        na_if()
+        ```
+      example: |
+        ```r
+        na_if(x, 9)
+        ```
+  - section: Vectorized Functionalities
+    description: Element-wise max()
+    julia_code:
+      template: |
+        ```julia
+        max.(vector1, vector2)
+        ```
+      example: |
+        ```julia
+        max.(y,z)
+        ```
+    r_code:
+      template: |
+        ```r
+        pmax()
+        ```
+      example: |
+        ```r
+        pmax(y,z)
+        ```
+  - section: Vectorized Functionalities
+    description: Value recoding
+    julia_code:
+      template: |
+        ```julia
+        replace(vector, value_to_replace=>replace_value)
+        ```
+      example: |
+        ```julia
+        replace(cvec, "a"=>"apple")
+        ```
+    r_code:
+      template: |
+        ```r
+        recode()
+        ```
+      example: |
+        ```r
+        recode(cvec, a = "apple")
+        ```
+################################################################################
+  - section: Summarizing Functionalities
+    header: true
+    description: Number of values/rows
+    julia_code:
+      template: |
+        ```julia
+        groupby(data, group) |> x->combine(x, nrow)
+        ```
+      example: |
+        ```julia
+        groupby(mpg, :Cyl) |> x->combine(x, nrow)
+        ```
+    r_code:
+      template: |
+        ```r
+        n()
+        ```
+      example: |
+        ```r
+        mpg %>% group_by(cyl) %>% summarise(n=n())
+        ```
+  - section: Summarizing Functionalities
+    description: Number of uniques
+    julia_code:
+      template: |
+        ```julia
+        groupby(data, group) |> x->combine(x, column => length ∘ unique => newcol)
+        ```
+      example: |
+        ```julia
+        groupby(mpg, :Cyl) |> x->combine(x, :Trans => length ∘ unique => :Trans)
+        ```
+    r_code:
+      template: |
+        ```r
+        n_distinct()
+        ```
+      example: |
+        ```r
+        mpg %>% group_by(cyl) %>% summarise(trans=n_distinct(trans))
+        ```
+    note: Use ∘ (circ) to compose functions
+  - section: Summarizing Functionalities
+    description: Take mean
+    julia_code:
+      template: |
+        ```julia
+        mean(vector)
+        ```
+      example: |
+        ```julia
+        mean(x)
+        ```
+    r_code:
+      template: |
+        ```r
+        mean()
+        ```
+      example: |
+        ```r
+        mean(x)
+        ```
+    note: see also median, maximum, minimum, quantile, iqr, mad, std, var
+  - section: Summarizing Functionalities
+    description: First values
+    julia_code:
+      template: |
+        ```julia
+        first(vector, n)
+        ```
+      example: |
+        ```julia
+        first(x, 3)
+        ```
+    r_code:
+      template: |
+        ```r
+        first()
+        ```
+      example: |
+        ```r
+        first(x, 3)
+        ```
+################################################################################
+  - section: Combining Tables
+    header: true
+    description: Combining "besides" each other
+    julia_code:
+      template: |
+        ```julia
+        hcat(dataframe1, dataframe2)
+        ```
+      example: |
+        ```julia
+        hcat(df1, df2)
+        ```
+    r_code:
+      template: |
+        ```r
+        bind_cols()
+        ```
+      example: |
+        ```r
+        bind_cols(df1, df2)
+        ```
+  - section: Combining Tables
+    description: Combining "below" each other
+    julia_code:
+      template: |
+        ```julia
+        vcat(dataframe1, dataframe2)
+        ```
+      example: |
+        ```julia
+        vcat(df1, df2)
+        ```
+    r_code:
+      template: |
+        ```r
+        bind_rows()
+        ```
+      example: |
+        ```r
+        bind_rows(df1, df2)
+        ```
+  - section: Combining Tables
+    description: Retain all values, all rows.
+    julia_code:
+      template: |
+        ```julia
+        outerjoin(dataframe1, dataframe2, on = [colmatches])
+        ```
+      example: |
+        ```julia
+        outerjoin(dfa, dfb, on = :ID)
+        ```
+    r_code:
+      template: |
+        ```r
+        full_join()
+        ```
+      example: |
+        ```r
+        full_join(dfa, dfb, by = ID)
+        ```
+  - section: Combining Tables
+    description: Table join retaining only rows with matches
+    julia_code:
+      template: |
+        ```julia
+        innerjoin(dataframe1, dataframe2, on = [colmatches])
+        ```
+      example: |
+        ```julia
+        innerjoin(df1, df2, on = [:City => :Location, :Job => :Work])
+        ```
+    r_code:
+      template: |
+        ```r
+        inner_join()
+        ```
+      example: |
+        ```r
+        inner_join(df1, df2, by = c("City" = "Location", "Job" = "Work"))
+        ```
+    note: see also leftjoin, rightjoin, semijoin, antijoin
+---

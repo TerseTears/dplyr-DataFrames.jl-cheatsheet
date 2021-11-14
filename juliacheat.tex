@@ -1,0 +1,66 @@
+---
+documentclass: extarticle
+classoption: [a4paper, landscape]
+header-includes:
+  - \usepackage{graphicx}
+  - \usepackage[lmargin=1cm,rmargin=1cm,tmargin=1cm,bmargin=1.5cm]{geometry}
+  - \usepackage{multicol}
+  - \usepackage{fvextra}
+  - \usepackage{fancyhdr}
+  - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\},breaksymbolleft=,breakindentnchars=2,breakautoindent=false}
+  - \setlength{\columnsep}{30pt}
+  - \setlength{\columnseprule}{1pt}
+  - \def\columnseprulecolor{\color{Green}}
+  - \newcommand{\myRule}[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
+  - \let\Begin\begin
+  - \let\End\end
+mainfont: DejaVuSansMono
+monofont: Hack
+fontsize: 8pt
+colorlinks: true
+---
+
+<!-- NOTE setting colorlinks to true is absolutely important to get xcolor names -->
+
+\pagestyle{fancy}
+\fancyhead[LE,RO]{}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+\fancyhf[RF]{TerseTears (\today)}
+\fancyhf[LF]{\includegraphics[scale=0.05]{logo} \href{https://github.com/JuliaData/DataFrames.jl}{DataFrames.jl}}
+\fancyhf[CF]{\thepage}
+
+# `dplyr` to `DataFrames.jl` Cheatsheet \normalsize(Description, Julia template, Julia example, R template, R example)
+
+
+\Begin{multicols}{3}
+
+$for(Julia)$
+$if(it.header)$
+\myRule[Green]{\linewidth}{3pt}
+\vspace{-20pt}
+## $it.section$
+$else$
+\myRule[Purple]{\linewidth}{3pt}
+$endif$ 
+\small \textbf{$it.description/chomp$}
+\normalsize
+$it.julia_code.template/chomp$
+\vspace{-5pt}
+\small
+$it.julia_code.example/chomp$
+$if(it.note)$
+\footnotesize \emph{$it.note/chomp$}
+\small
+$endif$
+\smallskip
+$it.r_code.template/chomp$
+\vspace{-10pt}
+$it.r_code.example/chomp$
+\normalsize
+
+\vspace{-3pt}
+
+$endfor$
+
+\End{multicols}
