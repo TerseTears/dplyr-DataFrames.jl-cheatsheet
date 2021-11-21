@@ -318,7 +318,7 @@ Julia:
         ```
       example: |
         ```julia
-        relocate(mpg, :Disp, :)
+        select(mpg, :Disp, :)
         ```
     r_code:
       template: |
@@ -379,7 +379,7 @@ Julia:
         ```
       example: |
         ```julia
-        rename(mpg, [:Model, :Year] .=> [:type, :date])
+        rename(mpg, [:Model, :Year] .=> [:Type, :Date])
         ```
     r_code:
       template: |
@@ -790,7 +790,7 @@ Julia:
         mpg %>% group_by(cyl) %>% summarise(n=n())
         ```
   - section: Summarizing Functionalities
-    description: Number of uniques
+    description: Number of unique values
     julia_code:
       template: |
         ```julia
@@ -894,7 +894,7 @@ Julia:
         bind_rows(df1, df2)
         ```
   - section: Combining Tables
-    description: Retain all values, all rows.
+    description: Retain all values, all rows
     julia_code:
       template: |
         ```julia
