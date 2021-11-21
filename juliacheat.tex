@@ -3,7 +3,7 @@ documentclass: extarticle
 classoption: [a4paper, landscape]
 header-includes:
   - \usepackage{graphicx}
-  - \usepackage[lmargin=1cm,rmargin=1cm,tmargin=1cm,bmargin=1.5cm]{geometry}
+  - \usepackage[lmargin=1cm,rmargin=1cm,tmargin=1.75cm,bmargin=1.5cm]{geometry}
   - \usepackage{multicol}
   - \usepackage{fvextra}
   - \usepackage{fancyhdr}
@@ -23,10 +23,11 @@ colorlinks: true
 <!-- NOTE setting colorlinks to true is absolutely important to get xcolor names -->
 
 \pagestyle{fancy}
-\fancyhead[LE,RO]{}
+\fancyhf[LH]{}
+\fancyhf[RH]{}
 \renewcommand{\headrulewidth}{1pt}
 \renewcommand{\footrulewidth}{1pt}
-\fancyhf[RF]{TerseTears (\today)}
+\fancyhf[RF]{\href{https://github.com/TerseTears/dplyr-DataFrames.jl-cheatsheet}{TerseTears} (\today)}
 \fancyhf[LF]{\includegraphics[scale=0.05]{logo} \href{https://github.com/JuliaData/DataFrames.jl}{DataFrames.jl}}
 \fancyhf[CF]{\thepage}
 
