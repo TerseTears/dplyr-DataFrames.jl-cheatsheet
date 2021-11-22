@@ -7,6 +7,7 @@ header-includes:
   - \usepackage{multicol}
   - \usepackage{fvextra}
   - \usepackage{fancyhdr}
+  - \usepackage{pgfornament}
   - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\},breaksymbolleft=,breakindentnchars=2,breakautoindent=false}
   - \setlength{\columnsep}{30pt}
   - \setlength{\columnseprule}{1pt}
@@ -38,11 +39,10 @@ colorlinks: true
 
 $for(Julia)$
 $if(it.header)$
-\myRule[Green]{\linewidth}{3pt}
-\vspace{-20pt}
-## $it.section$
+\pgfornament[width=\linewidth,color=Green]{88}
+\begin{center} \pgfornament[width=0.1\linewidth,color=Green,symmetry=h,ydelta=-3pt]{16} \large \textbf{$it.section$} \normalsize \pgfornament[width=0.1\linewidth,color=Green,symmetry=h,ydelta=-3pt]{15} \end{center}
 $else$
-\myRule[Purple]{\linewidth}{3pt}
+\myRule[Purple]{\linewidth}{2pt}
 $endif$ 
 \small \textbf{$it.description/chomp$}
 \normalsize
