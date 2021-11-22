@@ -46,20 +46,39 @@ $else$
 $endif$ 
 \small \textbf{$it.description/chomp$}
 \normalsize
+
+\Begin{minipage}{0.90\linewidth}
+
 $it.julia_code.template/chomp$
-\vspace{-5pt}
 \small
-$it.julia_code.example/chomp$
+$it.julia_code.example/chomp$ 
+
+\End{minipage}
+\Begin{minipage}{0.07\linewidth}
+
+\flushright
+\includegraphics[scale=0.05]{julia-logo-color}
+
+\End{minipage}
+
 $if(it.note)$
 \footnotesize \emph{$it.note/chomp$}
 \small
 $endif$
 \smallskip
+
+\Begin{minipage}{0.90\linewidth}
+
 $it.r_code.template/chomp$
-\vspace{-10pt}
 $it.r_code.example/chomp$
 \normalsize
+\End{minipage}
+\Begin{minipage}{0.07\linewidth}
 
+\flushright
+\includegraphics[scale=0.05]{Rlogo}
+
+\End{minipage}
 \vspace{-3pt}
 
 $endfor$
