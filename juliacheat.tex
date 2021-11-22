@@ -3,7 +3,7 @@ documentclass: extarticle
 classoption: [a4paper, landscape]
 header-includes:
   - \usepackage{graphicx}
-  - \usepackage[lmargin=1cm,rmargin=1cm,tmargin=1.75cm,bmargin=1.5cm]{geometry}
+  - \usepackage[lmargin=1cm,rmargin=1cm,tmargin=2.5cm,bmargin=1.5cm]{geometry}
   - \usepackage{multicol}
   - \usepackage{fvextra}
   - \usepackage{fancyhdr}
@@ -41,6 +41,7 @@ $for(Julia)$
 $if(it.header)$
 \pgfornament[width=\linewidth,color=Green]{88}
 \begin{center} \pgfornament[width=0.1\linewidth,color=Green,symmetry=h,ydelta=-3pt]{16} \large \textbf{$it.section$} \normalsize \pgfornament[width=0.1\linewidth,color=Green,symmetry=h,ydelta=-3pt]{15} \end{center}
+\vspace{5pt}
 $else$
 \myRule[Purple]{\linewidth}{2pt}
 $endif$ 
