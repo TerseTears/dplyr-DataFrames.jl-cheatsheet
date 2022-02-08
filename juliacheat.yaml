@@ -537,11 +537,11 @@ Julia:
     julia_code:
       template: |
         ```julia
-        searchsortedfirst.(Ref(nquantile(vector,n)), vector)
+        searchsortedfirst.( Ref( nquantile(vector,n) ), vector )
         ```
       example: |
         ```julia
-        searchsortedfirst.(Ref(nquantile(x,2)), x)
+        searchsortedfirst.( Ref( nquantile(x,2) ), x )
         ```
     r_code:
       template: |
@@ -752,7 +752,7 @@ Julia:
     julia_code:
       template: |
         ```julia
-        replace(vector, value_to_replace=>replace_value)
+        replace( vector, value_to_replace => replace_value )
         ```
       example: |
         ```julia
@@ -807,7 +807,7 @@ Julia:
         ```
       example: |
         ```r
-        mpg %>% group_by(cyl) %>% summarise(trans=n_distinct(trans))
+        mpg %>% group_by(cyl) %>% summarise( trans = n_distinct(trans) )
         ```
     note: Use ∘ (circ) to compose functions
   - section: Summarizing Functionalities
