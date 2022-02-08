@@ -3,18 +3,19 @@ documentclass: extarticle
 classoption: [a4paper, landscape]
 header-includes:
   - \usepackage{graphicx}
-  - \usepackage[lmargin=1cm,rmargin=1cm,tmargin=2.5cm,bmargin=1.5cm]{geometry}
+  - \usepackage[lmargin=0.25cm,rmargin=0.25cm,tmargin=1.75cm,bmargin=1.25cm]{geometry}
   - \usepackage{multicol}
   - \usepackage{fvextra}
   - \usepackage{fancyhdr}
   - \usepackage{pgfornament}
   - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\},breaksymbolleft=,breakindentnchars=2,breakautoindent=false}
-  - \setlength{\columnsep}{30pt}
+  - \setlength{\columnsep}{5pt}
   - \setlength{\columnseprule}{1pt}
   - \def\columnseprulecolor{\color{Green}}
   - \newcommand{\myRule}[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
   - \let\Begin\begin
   - \let\End\end
+  - \newcommand\putin[1]{#1}
 mainfont: DejaVuSansMono
 monofont: Hack
 fontsize: 8pt
@@ -45,42 +46,49 @@ $if(it.header)$
 $else$
 \myRule[Purple]{\linewidth}{2pt}
 $endif$ 
-\small \textbf{$it.description/chomp$}
+\small \center{\textbf{$it.description/chomp$}}
 \normalsize
 
-\Begin{minipage}{0.90\linewidth}
 
+\putin{\begin{minipage}[c]{0.55\linewidth}}
+
+\includegraphics[scale=0.05]{julia-logo-color}
+
+\putin{\end{minipage}}
+\putin{\begin{minipage}[c]{0.40\linewidth}}
+
+\includegraphics[scale=0.05]{Rlogo}
+
+\putin{\end{minipage}}
+\putin{\begin{minipage}[t]{0.55\linewidth}}
+
+\smallskip
 $it.julia_code.template/chomp$
+
+\putin{\end{minipage}}
+\putin{\begin{minipage}[t]{0.40\linewidth}}
+
+\smallskip
+$it.r_code.template/chomp$
+
+\putin{\end{minipage}}
+
+\putin{\begin{minipage}[t]{0.55\linewidth}}
+
 \small
 $it.julia_code.example/chomp$ 
 
-\End{minipage}
-\Begin{minipage}{0.07\linewidth}
+\putin{\end{minipage}}
+\putin{\begin{minipage}[t]{0.40\linewidth}}
 
-\flushright
-\includegraphics[scale=0.05]{julia-logo-color}
+$it.r_code.example/chomp$
 
-\End{minipage}
+\putin{\end{minipage}}
 
 $if(it.note)$
 \footnotesize \emph{$it.note/chomp$}
 \small
 $endif$
-\smallskip
-
-\Begin{minipage}{0.90\linewidth}
-
-$it.r_code.template/chomp$
-$it.r_code.example/chomp$
-\normalsize
-\End{minipage}
-\Begin{minipage}{0.07\linewidth}
-
-\flushright
-\includegraphics[scale=0.05]{Rlogo}
-
-\End{minipage}
-\vspace{-3pt}
 
 $endfor$
 
