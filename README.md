@@ -15,3 +15,9 @@ If you need further information on some of the commands, I've written two blog p
 Each block of the cheatsheet is an element of a yaml doc that are then put together using `Pandoc`'s template capabilities (as seen in the `juliacheat.tex` template). The elements of the yaml doc are written in markdown format and so a first pass translating from this document to a markdown document is performed. Afterwards, the said markdown document is translated into the latex cheatsheet pdf using `Pandoc`.
 
 This is to allow for easy contribution. One needs to simply add elements to the yaml doc, which is quite human-readable, or modify existing elements.
+
+## TODO
+
+- [] Write automatic tests for checking if commands run, thus keeping the cheatsheet updated in case of API changes (should be easy. Just extract the relevant yaml part, and run with `julia` started with the necessary packages and check which lines fail).
+
+- [] See if `DataFramesMeta` can also be fully translated into the `dplyr` commands and write the respective yaml section (should use two-column cheatsheet then for the content to appear properly).
